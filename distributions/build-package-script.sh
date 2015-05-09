@@ -29,6 +29,7 @@ LUA_VERSION=5.1.4
 PCRE_VERSION=8.36
 LUAROCKS_VERSION=2.2.2
 OPENRESTY_VERSION=1.7.10.2rc0
+DNSMASQ_VERSION=2.72
 
 # Variables to be used in the build process
 PACKAGE_TYPE=""
@@ -59,7 +60,7 @@ elif hash yum 2>/dev/null; then
   yum -y install wget tar make curl ldconfig gcc perl pcre-devel openssl-devel ldconfig unzip git rpm-build ncurses-devel which lua-$LUA_VERSION lua-devel-$LUA_VERSION gpg
 
   CENTOS_VERSION=`cat /etc/redhat-release | grep -oE '[0-9]+\.[0-9]+'`
-  FPM_PARAMS="-d epel-release -d sudo -d nc -d 'lua = $LUA_VERSION' -d openssl -d pcre"
+  FPM_PARAMS="-d epel-release -d sudo -d nc -d 'lua = $LUA_VERSION' -d openssl -d pcre -d dnsmasq"
 
   # Install Ruby for fpm
   if [[ ${CENTOS_VERSION%.*} == "5" ]]; then
@@ -89,7 +90,7 @@ elif hash apt-get 2>/dev/null; then
 
   PACKAGE_TYPE="deb"
   LUA_MAKE="linux"
-  FPM_PARAMS="-d netcat -d sudo -d lua5.1 -d openssl -d libpcre3"
+  FPM_PARAMS="-d netcat -d sudo -d lua5.1 -d openssl -d libpcre3 -d dnsmasq"
   FINAL_FILE_NAME="kong-$KONG_VERSION.${DEBIAN_VERSION}_all.deb"
 else
   echo "Unsupported platform"
@@ -131,6 +132,15 @@ if [ "$(uname)" = "Darwin" ]; then
   cd lua-$LUA_VERSION
   make $LUA_MAKE
   make install INSTALL_TOP=$OUT/usr/local
+  cd $OUT
+
+  # Install dnsmasq
+  cd $TMP
+  wget http://www.thekelleys.org.uk/dnsmasq/dnsmasq-$DNSMASQ_VERSION.tar.gz
+  tar xzf dnsmasq-$DNSMASQ_VERSION.tar.gz
+  cd dnsmasq-$DNSMASQ_VERSION
+  make
+  make install DESTDIR=$OUT
   cd $OUT
 
   LUAROCKS_CONFIGURE="--with-lua-include=$OUT/usr/local/include"
