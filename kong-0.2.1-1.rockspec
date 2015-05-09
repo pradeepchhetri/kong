@@ -18,16 +18,13 @@ dependencies = {
   "yaml ~> 1.1.1-1",
   "luasec ~> 0.5-2",
   "lapis ~> 1.1.0-1",
-  "inspect ~> 3.0-1",
   "stringy ~> 0.4-1",
-  "multipart ~> 0.1-2",
-  "cassandra ~> 0.5-6",
+  "cassandra ~> 0.5-7",
   "lua-path ~> 0.2.3-1",
   "lua-cjson ~> 2.1.0-1",
   "luasocket ~> 2.0.2-5",
   "ansicolors ~> 1.0.2-3",
   "lrexlib-pcre ~> 2.7.2-1",
-  "lua-llthreads2 ~> 0.1.3-1",
   "multipart ~> 0.1-2"
 }
 build = {
@@ -71,11 +68,12 @@ build = {
     ["kong.dao.cassandra.factory"] = "kong/dao/cassandra/factory.lua",
     ["kong.dao.cassandra.base_dao"] = "kong/dao/cassandra/base_dao.lua",
     ["kong.dao.cassandra.apis"] = "kong/dao/cassandra/apis.lua",
+    ["kong.dao.cassandra.consumers"] = "kong/dao/cassandra/consumers.lua",
+    ["kong.dao.cassandra.plugins_configurations"] = "kong/dao/cassandra/plugins_configurations.lua",
+    ["kong.dao.cassandra.migrations"] = "kong/dao/cassandra/migrations.lua",
     ["kong.dao.cassandra.ratelimiting_metrics"] = "kong/dao/cassandra/ratelimiting_metrics.lua",
     ["kong.dao.cassandra.basicauth_credentials"] = "kong/dao/cassandra/basicauth_credentials.lua",
     ["kong.dao.cassandra.keyauth_credentials"] = "kong/dao/cassandra/keyauth_credentials.lua",
-    ["kong.dao.cassandra.plugins_configurations"] = "kong/dao/cassandra/plugins_configurations.lua",
-    ["kong.dao.cassandra.consumers"] = "kong/dao/cassandra/consumers.lua",
 
     ["kong.plugins.base_plugin"] = "kong/plugins/base_plugin.lua",
 

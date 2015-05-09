@@ -137,7 +137,7 @@ local function prepare_database(args_config)
   local _, _, dao_factory = get_kong_config(args_config)
 
   -- Migrate the DB if needed and possible
-  local keyspace, err = dao_factory:get_migrations()
+  local keyspace, err = dao_factory.migrations:get_migrations()
   if err then
     cutils.logger:error_exit(err)
   elseif keyspace == nil then
@@ -176,8 +176,9 @@ function _M.prepare_kong(args_config)
   kong_config.database,
   tostring(dao_config)))
 
-  prepare_nginx_working_dir(args_config)
+  cutils.logger:info("Connecting to the database...")
   prepare_database(args_config)
+  prepare_nginx_working_dir(args_config)
 end
 
 -- Send a signal to `nginx`. No signal will start the process

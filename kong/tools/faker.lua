@@ -1,5 +1,4 @@
 local Object = require "classic"
-local inspect = require "inspect"
 local utils = require "kong.tools.utils"
 
 math.randomseed(os.time())
@@ -53,7 +52,7 @@ Faker.FIXTURES = {
     { name = "keyauth", value = { key_names = { "apikey" }}, __api = 1 },
     { name = "tcplog", value = { host = "127.0.0.1", port = 7777 }, __api = 1 },
     { name = "udplog", value = { host = "127.0.0.1", port = 8888 }, __api = 1 },
-    { name = "filelog", value = { }, __api = 1 },
+    { name = "filelog", value = {}, __api = 1 },
     -- API 2
     { name = "basicauth", value = {}, __api = 2 },
     -- API 3
@@ -73,9 +72,9 @@ Faker.FIXTURES = {
     -- API 6
     { name = "cors", value = {}, __api = 6 },
     -- API 7
-    { name = "cors", value = { origin = "example.com", 
-                               methods = "GET", 
-                               headers = "origin, type, accepts", 
+    { name = "cors", value = { origin = "example.com",
+                               methods = "GET",
+                               headers = "origin, type, accepts",
                                exposed_headers = "x-auth-token",
                                max_age = 23,
                                credentials = true }, __api = 7 }
@@ -194,7 +193,9 @@ function Faker:insert_from_table(entities_to_insert, pick_relations)
       local dao_type = type=="plugin_configuration" and "plugins_configurations" or type.."s"
       local res, err = self.dao_factory[dao_type]:insert(entity)
       if err then
-        error("Faker failed to insert "..type.." entity: "..inspect(entity).."\n"..err)
+        local printable_mt = require "kong.tools.printable"
+        setmetatable(entity, printable_mt)
+        error("Faker failed to insert "..type.." entity: "..entity.."\n"..err)
       end
 
       -- For other hard-coded entities relashionships

@@ -1,10 +1,27 @@
 ## [Unreleased][unreleased]
 
+#### Added
+- DAO
+  - Cassandra version bumped to 2.1.5
+  - support for Cassandra downtime. If Cassandra goes down and is brought back up, Kong will not need to restart anymore, statements will be re-prepared on-the-fly. This is part of an ongoing effort from [jbochi/lua-resty-cassandra#47](https://github.com/jbochi/lua-resty-cassandra/pull/47), [#146](https://github.com/Mashape/kong/pull/146) and [#187](https://github.com/Mashape/kong/pull/187).
+Queries effectued during the downtime will still be lost. [#11](https://github.com/Mashape/kong/pull/11)
+  - Leverage reused sockets. If the DAO reuses a socket, it will not re-set their keyspace. This should give a small but appreciable performance improvement. [#170](https://github.com/Mashape/kong/pull/170)
+  - Cascade delete plugins configurations when deleting a Consumer or an API associated with it. [#107](https://github.com/Mashape/kong/pull/107)
+  - Allow Cassandra hosts listening on different ports than the default. [#185](https://github.com/Mashape/kong/pull/185)
+
+#### Fixed
+- Admin API: responses now have a new line after the body. [#164](https://github.com/Mashape/kong/issues/164)
+- DAO: keepalive property is now properly passed when Kong calls `set_keepalive` on Cassandra sockets.
+- Resolver
+  - More explicit "API not found" message from the resolver if the Host was not found in the system. "Api not foun with Host: %s".
+  - If multiple hosts headers are being sent, Kong will test them all to see if one of the API is in the system. [#186](https://github.com/Mashape/kong/pull/186)
+
 ## [0.2.0-2] - 2015/04/27
 
 First public release of Kong. This version brings a lot of internal improvements as well as more usability and a few additional plugins.
 
 #### Added
+- CORS plugin.
 - Request transformation plugin.
 - NGINX plus monitoring plugin.
 - New configuration properties: `proxy_port` and `api_admin_port`. [#142](https://github.com/Mashape/kong/issues/142)
@@ -53,7 +70,7 @@ First public beta. Includes caching and better usability.
 #### Fixed
 - `Server` header now sends Kong. [#57](https://github.com/Mashape/kong/issues/57)
 - migrations not being executed in order on Linux. This issue wasn't noticed until unit testing the migrations because for now we only have 1 migration file.
-- **Admin API**: Errors responses are now sent as JSON. [#58](https://github.com/Mashape/kong/issues/58)
+- Admin API: Errors responses are now sent as JSON. [#58](https://github.com/Mashape/kong/issues/58)
 
 > **internal**
 > - We now have code linting and coverage.

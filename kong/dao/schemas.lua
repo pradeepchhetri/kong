@@ -14,9 +14,6 @@ local LUA_TYPE_ALIASES = {
   [constants.DATABASE_TYPES.TIMESTAMP] = "number"
 }
 
---
--- Schemas
---
 local _M = {}
 
 -- Returns the proper Lua type from a schema type, handling aliases
@@ -43,7 +40,7 @@ function _M.validate(t, schema, is_update)
     -- Set default value for the field if given
     if t[column] == nil and v.default ~= nil then
       if type(v.default) == "function" then
-        t[column] = v.default()
+        t[column] = v.default(t)
       else
         t[column] = v.default
       end
